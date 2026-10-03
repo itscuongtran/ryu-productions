@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Justin Tran · Ryu Productions</title>
+<meta name="description" content="Justin Tran is the creative mind behind Ryu Productions, bringing endless ideas to life with AI. Hover a cover to watch the film underneath.">
+<meta name="theme-color" content="#2b2c2d">
+<!-- DEPLOY STEP: patch og:url and og:image with the live absolute URL before zipping -->
+<meta property="og:title" content="Justin Tran · Ryu Productions">
+<meta property="og:description" content="Endless ideas, brought to life with AI. Ryu is the passion. Justin is the mind behind it.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://example.com/">
+<meta property="og:image" content="https://example.com/assets/cover-apprentice.jpg">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=Archivo:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --canvas:#2b2c2d;
+  --panel:#343537;
+  --paper:#eceae6;
+  --paper-deep:#343537;
+  --ink:#eceae6;
+  --accent:#eceae6;
+  --accent-hover:#ffffff;
+  --accent-ink:#2b2c2d;
+  --accent-muted:rgba(236,234,230,.28);
+  --teal:#c9c7c2;
+  --slate:#c9c7c2;
+  --neon:#eceae6;
+  --text-primary:#eceae6;
+  --text-secondary:#a9aaab;
+  --paper-secondary:#a9aaab;
+  --line-dark:rgba(236,234,230,.18);
+  --line-paper:rgba(236,234,230,.18);
+  --display:'Big Shoulders Display',Impact,'Arial Narrow',sans-serif;
+  --body:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --tshadow:0 1px 2px rgba(5,5,10,.95),0 3px 12px rgba(5,5,10,.78),0 10px 44px rgba(5,5,10,.8);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden;overflow-x:clip;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{overflow-x:hidden;overflow-x:clip;background:var(--canvas);color:var(--text-primary);font-family:var(--body);font-weight:300;font-size:19px;line-height:1.5;letter-spacing:.01em;opacity:0;animation:pageIn 1.2s var(--ease) .1s forwards}
+@keyframes pageIn{to{opacity:1}}
+img,video,svg{display:block;max-width:100%}
+[hidden]{display:none !important}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:.92;letter-spacing:-.02em;text-transform:uppercase}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:400}
+.skip{position:absolute;left:-999px;top:12px;background:var(--accent);color:var(--accent-ink);padding:10px 16px;z-index:100;font-family:var(--mono);font-size:13px}
+.skip:focus{left:12px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1400px;margin:0 auto;padding:0 clamp(16px,4vw,56px)}
+
+/* ---------- environment layer ---------- */
+.env{position:fixed;inset:0;z-index:0;pointer-events:none}
+.env .glow{position:absolute;width:70vmax;height:70vmax;left:-10vmax;top:10vh;border-radius:50%;background:radial-gradient(circle,rgba(236,234,230,.05) 0%,rgba(236,234,230,0) 60%);filter:blur(20px);animation:drift 70s ease-in-out -23s infinite alternate}
+.env .grain{position:absolute;inset:-50%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.1;animation:grain 1.6s steps(5) infinite}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(45vw,30vh)}}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-4%)}60%{transform:translate(-4%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(16px,4vw,56px) 26px;color:var(--text-primary);background:linear-gradient(to bottom,rgba(43,44,45,.9) 0%,rgba(43,44,45,.6) 55%,rgba(43,44,45,0) 100%)}
+.nav{transition:background-color .4s var(--ease),padding .4s var(--ease)}
+.nav.solid{background:#2b2c2d;padding-bottom:16px;box-shadow:0 1px 0 var(--line-dark)}
+.nav .brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+.nav .brand img{height:34px;width:auto;display:block}
+.nav .brand span{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
+.nav ul{display:flex;gap:26px;list-style:none;align-items:center}
+.nav ul a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:6px 0;position:relative}
+.nav ul a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:currentColor;transition:right .5s var(--ease)}
+.nav ul a:hover::after,.nav ul a:focus-visible::after{right:0}
+.nav .cta{border:1px solid currentColor;padding:9px 14px}
+.nav .cta::after{display:none}
+@media (max-width:720px){.nav ul li:not(.keep){display:none}.nav .brand img{height:30px}}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:16px 26px;border:1px solid currentColor;line-height:1;transition:background .45s var(--ease),color .45s var(--ease),border-color .45s var(--ease),transform .45s var(--ease)}
+.btn.solid{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.solid:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.btn:hover{transform:translateY(-2px)}
+@media (pointer:coarse){.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;height:1000vh;z-index:1}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--canvas)}
+.poster{position:absolute;inset:0;background-size:cover;background-position:center center}
+#hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;opacity:0;transition:opacity 1.2s var(--ease);will-change:transform;transform:translateZ(0)}
+.stage.video-ready #hero{opacity:1}
+.stage.video-failed #hero{display:none}
+.scrim{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 120% 90% at 50% 45%,rgba(10,10,18,0) 35%,rgba(10,10,18,.62) 100%)}
+.stage .frame{position:absolute;inset:0;pointer-events:none}
+.stage .frame .mark{position:absolute;width:26px;height:26px;border-color:var(--paper);border-style:solid;border-width:0;opacity:.75}
+.mark.tl{left:22px;top:84px;border-left-width:1px;border-top-width:1px}
+.mark.tr{right:22px;top:84px;border-right-width:1px;border-top-width:1px}
+.mark.bl{left:22px;bottom:22px;border-left-width:1px;border-bottom-width:1px}
+.mark.br{right:22px;bottom:22px;border-right-width:1px;border-bottom-width:1px}
+.side{position:absolute;left:30px;top:50%;transform:rotate(180deg) translateY(50%);writing-mode:vertical-rl;color:var(--paper);opacity:.7;font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase}
+.side.r{left:auto;right:30px;transform:translateY(-50%)}
+.band{position:absolute;max-width:min(46vw,620px);opacity:0;will-change:opacity;text-shadow:var(--tshadow)}
+.band::before{content:"";position:absolute;inset:-42% -32%;pointer-events:none;z-index:-1;opacity:calc(.3 + .7*var(--k,1));background:radial-gradient(ellipse 62% 56% at 50% 50%,rgba(5,5,10,.8) 0%,rgba(5,5,10,.74) 42%,rgba(5,5,10,.5) 60%,rgba(5,5,10,0) 80%)}
+.band .btn{text-shadow:none}
+.band.left{left:clamp(64px,8vw,140px);top:50%;transform:translateY(-50%)}
+.band.center{left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;max-width:min(70vw,900px)}
+.band h1,.band h2{font-size:clamp(44px,7vw,112px);color:var(--paper)}
+.band .sub{margin-top:18px;font-size:clamp(17px,1.4vw,22px);color:var(--text-primary);max-width:44ch}
+.band .band-logo{display:block;height:clamp(96px,11vw,168px);width:auto;margin:0 0 clamp(14px,1.6vw,26px);--kl:clamp(0,var(--k,0)*1.8,1);opacity:var(--kl);transform:translateY(calc((1 - var(--kl))*-14px));filter:drop-shadow(0 4px 18px rgba(5,5,10,.55))}
+.band.intro h1{font-size:clamp(30px,3.15vw,50px);letter-spacing:.02em;line-height:1}
+.band .eyebrow{display:block;margin-bottom:16px;color:var(--paper);opacity:.85}
+.band .ctas{margin-top:28px;display:flex;gap:14px;flex-wrap:wrap}
+.band.center .ctas{justify-content:center}
+.band .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.band .w{display:inline-block;white-space:nowrap;margin-right:.1em}
+.band .c{display:inline-block}
+/* entrances */
+.band[data-fx="grid"] .c,.band[data-fx="scatter"] .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);transform:translate(calc((1 - var(--kc))*var(--jx,0px)),calc((1 - var(--kc))*var(--jy,0px))) rotate(calc((1 - var(--kc))*var(--jr,0deg)))}
+.band[data-fx="approach"] .line{--kc:var(--k,0);opacity:var(--kc);transform:scale(calc(.82 + .18*var(--kc)));transform-origin:center}
+.band[data-fx="blur"] .stack{position:relative}
+.band[data-fx="blur"] .soft{position:absolute;inset:0;filter:blur(10px);opacity:calc(1 - var(--k,0))}
+.band[data-fx="blur"] .sharp{opacity:var(--k,0)}
+.band[data-fx="rise"] .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.8,1);opacity:var(--kc);transform:translateY(calc((1 - var(--kc))*22px))}
+.band[data-fx="rise"] .sub{--ks:clamp(0,(var(--k,0) - .62)*4,1);opacity:var(--ks);transform:translateY(calc((1 - var(--ks))*14px))}
+.band[data-fx="rise"] .ctas{--kb:clamp(0,(var(--k,0) - .76)*5,1);opacity:var(--kb);transform:translateY(calc((1 - var(--kb))*12px))}
+.band[data-fx="rise"] .eyebrow{--ke:clamp(0,var(--k,0)*3,1);opacity:calc(var(--ke)*.85)}
+/* sub lines on grid/scatter bands */
+.band .sub.k{--ks:clamp(0,(var(--k,0) - .5)*3,1);opacity:var(--ks)}
+/* cue, ring */
+.cue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;opacity:.85}
+.cue i{width:7px;height:7px;background:var(--paper);display:block;animation:dot 2.4s ease-in-out infinite}
+.cue i:nth-child(2){animation-delay:-.8s}.cue i:nth-child(3){animation-delay:-1.6s}
+@keyframes dot{0%,100%{opacity:.3}50%{opacity:1}}
+.cue.gone{display:none}
+.ring{position:absolute;right:28px;bottom:26px;width:34px;height:34px;color:var(--paper);transform:rotate(-90deg);opacity:.9;transition:opacity .6s var(--ease)}
+.ring circle{transition:stroke-dashoffset .15s linear}
+.stage.video-ready .ring,.stage.video-failed .ring{opacity:0}
+.chev{position:absolute;right:28px;bottom:26px;width:34px;height:34px;color:var(--paper);opacity:.9}
+/* static hero */
+.static-hero{display:none}
+
+/* ---------- sections ---------- */
+section{position:relative;z-index:1}
+.paper-sec{background:var(--canvas);color:var(--text-primary)}
+main section + section{border-top:1px solid var(--line-dark)}
+.ink-sec{background:var(--canvas);color:var(--text-primary)}
+.sec{padding:clamp(72px,9vw,130px) 0}
+.kicker{display:block;margin-bottom:22px;color:var(--text-secondary)}
+
+.sec h2{font-size:clamp(42px,6.4vw,104px)}
+.sec .lede{margin-top:22px;font-size:clamp(18px,1.4vw,22px);max-width:52ch}
+.paper-sec .lede{color:var(--paper-secondary)}
+.ink-sec .lede{color:var(--text-secondary)}
+
+/* ---------- work gallery ---------- */
+
+.grid{display:grid;grid-template-columns:repeat(8,1fr);gap:clamp(12px,1.4vw,24px)}
+.card{position:relative;background:var(--paper-deep);overflow:hidden;cursor:pointer;text-decoration:none;color:inherit;display:block;transition:transform .6s var(--ease-out)}
+.work .wrap{max-width:1760px;padding:0 clamp(16px,2vw,40px)}
+.card.wide{grid-column:1 / -1;aspect-ratio:16/9}
+.series{grid-column:1 / -1;display:flex;align-items:center;gap:clamp(16px,2vw,28px);padding-top:clamp(64px,9vw,150px);padding-bottom:clamp(4px,1vw,12px)}
+.series h3{font-size:clamp(30px,3.4vw,54px);color:var(--ink);white-space:nowrap}
+.work-title{margin-bottom:clamp(28px,3.4vw,56px)}
+.project-note{grid-column:1 / -1}
+.project-note .series-note{margin:0;max-width:56ch}
+.project-note.series-intro{margin:-4px 0 clamp(8px,1.4vw,20px)}
+.project-note.series-intro > .credit:first-child{margin-top:0}
+.project-note .credit{margin-top:14px;color:var(--text-secondary);opacity:.8}
+.series-note{grid-column:1 / -1;max-width:46ch;margin:-4px 0 clamp(8px,1.4vw,20px);color:var(--text-secondary);font-size:clamp(16px,1.15vw,18px);line-height:1.55}
+.series::after{content:"";flex:1;height:1px;background:var(--line-paper)}
+.card.tall{aspect-ratio:3/4;grid-column:span 2}
+.grid .card.tall:nth-of-type(6){grid-column:2 / span 2}
+.card .cover,.card video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card .cover{z-index:2;transition:transform .9s var(--ease-out),opacity .7s var(--ease) .1s}
+.card video{z-index:1;opacity:0;transition:opacity .6s var(--ease)}
+.card.on .cover{transform:translateY(-6%) scale(1.02);opacity:0}
+.card.on video{opacity:1}
+.card .marks{position:absolute;inset:14px;pointer-events:none;z-index:3;border:1px solid rgba(235,226,204,0);transition:border-color .6s var(--ease)}
+.card.on .marks{border-color:rgba(235,226,204,.55)}
+.card .label{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:18px 22px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;color:var(--paper);background:linear-gradient(to top,rgba(24,25,26,.78),rgba(24,25,26,0));opacity:0;transform:translateY(8px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.card.on .label,.card:focus-visible .label{opacity:1;transform:none}
+.card .label h3{font-size:clamp(26px,2.6vw,40px);text-transform:uppercase;line-height:.9;min-width:0;overflow-wrap:anywhere}
+.card .label .mono{opacity:.9;text-align:right;white-space:nowrap;flex-shrink:0}
+.card .open{position:absolute;right:22px;top:22px;z-index:5;display:none;background:var(--accent);color:var(--accent-ink);border:0;padding:12px 14px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+@media (pointer:coarse){.card.on .open{display:block}}
+.card.has-scrub .label{padding-bottom:52px}
+.card .scrub{position:absolute;left:22px;right:22px;bottom:12px;z-index:6;display:flex;align-items:center;gap:12px;height:30px;color:var(--paper);opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .5s var(--ease),transform .5s var(--ease);touch-action:none;cursor:pointer}
+.card.on .scrub{opacity:1;transform:none;pointer-events:auto}
+.scrub .track{position:relative;flex:1;height:30px;overflow:hidden}
+.scrub .track::before{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:rgba(236,234,230,.32)}
+.scrub .fill{position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:var(--paper);transform:scaleX(var(--p,0));transform-origin:left;pointer-events:none}
+.scrub .kw{position:absolute;inset:0;transform:translateX(calc(var(--p,0) * 100%));pointer-events:none}
+.scrub .knob{position:absolute;left:-5px;top:50%;width:10px;height:10px;margin-top:-5px;background:var(--paper);transition:transform .2s var(--ease)}
+.scrub:hover .knob,.card[data-dragging] .knob,.scrub .track:focus-visible .knob{transform:scale(1.4)}
+.scrub .track:focus-visible{outline:1px solid var(--paper);outline-offset:2px}
+.snd{position:relative;flex:0 0 auto;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;background:none;border:1px solid rgba(236,234,230,.45);color:var(--paper);padding:0;cursor:pointer;transition:border-color .3s var(--ease),background .3s var(--ease)}
+.snd:hover{border-color:var(--paper);background:rgba(236,234,230,.12)}
+.snd svg{width:15px;height:15px;display:block}
+.snd .w{opacity:0;transition:opacity .3s var(--ease)}
+.snd .x{opacity:1;transition:opacity .3s var(--ease)}
+.snd[aria-pressed="true"] .w{opacity:1}
+.snd[aria-pressed="true"] .x{opacity:0}
+.snd::after{content:"";position:absolute;inset:-1px;border:1px solid var(--paper);opacity:0;pointer-events:none}
+.card.hint .snd::after{animation:sndPulse 1.3s var(--ease-out) .5s 2}
+@keyframes sndPulse{0%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(1.7)}}
+.card .label .swap{display:grid;flex-shrink:0;justify-items:end}
+.card .label .swap>span{grid-area:1/1;transition:opacity .4s var(--ease)}
+.card .label .swap .tip{opacity:0}
+.card.hint .label .swap .tip{opacity:1;transition-delay:.4s}
+.card.hint .label .swap .ep{opacity:0}
+@media (prefers-reduced-motion: reduce){.card.hint .snd::after{animation:none}}
+.scrub .t{font-size:11px;letter-spacing:.06em;white-space:nowrap;font-variant-numeric:tabular-nums;text-shadow:0 1px 3px rgba(0,0,0,.85)}
+.grid .card{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease-out)}
+.grid.in .card{opacity:1;transform:none}
+.grid.in .card:nth-of-type(2){transition-delay:.1s}.grid.in .card:nth-of-type(3){transition-delay:.2s}.grid.in .card:nth-of-type(4){transition-delay:.3s}.grid.in .card:nth-of-type(5){transition-delay:.4s}.grid.in .card:nth-of-type(6){transition-delay:.5s}.grid.in .card:nth-of-type(7){transition-delay:.6s}.grid.in .card:nth-of-type(8){transition-delay:.7s}.grid.in .card:nth-of-type(9){transition-delay:.8s}.grid.in .card:nth-of-type(10){transition-delay:.9s}.grid.in .card:nth-of-type(11){transition-delay:1s}.grid.in .card:nth-of-type(12){transition-delay:1.1s}
+.grid.in.settled .card:nth-of-type(n){transition-delay:0s}
+.card:hover{transform:translateY(-4px)}
+.card.on:hover{transform:translateY(-4px)}
+.caps{margin-top:34px;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,2vw,28px)}
+.caps div{border-top:1px solid var(--line-paper);padding-top:14px}
+.caps b{display:block;font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:6px}
+.caps p{color:var(--paper-secondary);font-size:16px}
+.caps .mono{color:var(--ink);opacity:.7;margin-bottom:8px;display:block}
+
+/* ---------- proof ---------- */
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* ---------- contact ---------- */
+.contact .inner{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+.contact h2{font-size:clamp(30px,3.4vw,54px);line-height:1}
+.contact .btn.solid{background:none;color:var(--text-primary);border-color:var(--line-dark)}
+.contact .btn.solid:hover{border-color:var(--text-primary);background:none}
+.contact p{margin-top:14px;color:var(--paper-secondary);max-width:36ch;font-size:17px}
+.contact .ctas{margin-top:24px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.contact .mail{font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-paper);padding-bottom:2px}
+.eclipse{position:relative;width:clamp(150px,16vw,240px);aspect-ratio:1;margin-right:clamp(0px,4vw,60px)}
+.eclipse i{position:absolute;display:block;border-radius:50%;pointer-events:none}
+/* one 16s cycle: the moon crosses the sun, totality from ~45% to ~57%, diamond ring flashes either side */
+.eclipse .halo{inset:-22%;background:radial-gradient(circle closest-side,rgba(255,248,232,.55) 55%,rgba(255,248,232,.12) 72%,rgba(255,248,232,0) 100%);opacity:0;animation:ec-halo 16s ease-in-out infinite}
+.eclipse .rays{inset:-48%;background:repeating-conic-gradient(rgba(236,234,230,.1) 0deg 1.4deg,rgba(236,234,230,0) 1.4deg 7deg);-webkit-mask:radial-gradient(circle closest-side,transparent 48%,#000 54%,transparent 100%);mask:radial-gradient(circle closest-side,transparent 48%,#000 54%,transparent 100%);animation:spin 160s linear -40s infinite,ec-corona 16s ease-in-out infinite}
+.eclipse .corona{inset:-30%;background:radial-gradient(circle closest-side,rgba(236,234,230,0) 60%,rgba(236,234,230,.75) 63.5%,rgba(236,234,230,.24) 72%,rgba(236,234,230,.06) 86%,rgba(236,234,230,0) 100%);animation:ec-corona 16s ease-in-out infinite}
+.eclipse .sun{inset:0;background:radial-gradient(circle at 50% 50%,#fffdf6 0%,#f6efdf 70%,#e9dfc8 100%)}
+.eclipse .moon{inset:-1%;background:radial-gradient(circle at 46% 44%,#2f3032 0%,#27282a 70%,#232426 100%);animation:ec-moon 16s cubic-bezier(.45,0,.55,1) infinite}
+.eclipse .glint{width:10px;height:10px;top:50%;margin-top:-5px;background:#fff;box-shadow:0 0 8px 3px rgba(255,255,255,.95),0 0 28px 10px rgba(236,234,230,.5);opacity:0}
+.eclipse .glint.g1{right:-4px;animation:ec-g1 16s ease-in-out infinite}
+.eclipse .glint.g2{left:-4px;animation:ec-g2 16s ease-in-out infinite}
+@keyframes ec-moon{0%{transform:translateX(-125%)}43%{transform:translateX(-1.5%)}46%,56%{transform:translateX(0)}59%{transform:translateX(1.5%)}100%{transform:translateX(125%)}}
+@keyframes ec-halo{0%,30%{opacity:1}43%{opacity:.25}45%,58%{opacity:0}70%,100%{opacity:1}}
+@keyframes ec-corona{0%,40%{opacity:0}47%,55%{opacity:1}62%,100%{opacity:0}}
+@keyframes ec-g1{0%,40%{opacity:0;transform:scale(.6)}44%{opacity:1;transform:scale(1.25)}47%,100%{opacity:0;transform:scale(.6)}}
+@keyframes ec-g2{0%,55%{opacity:0;transform:scale(.6)}58%{opacity:1;transform:scale(1.25)}61%,100%{opacity:0;transform:scale(.6)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.contact .ink-tr{position:absolute;right:0;top:0;width:0;height:0;border-top:80px solid var(--canvas);border-left:80px solid transparent}
+
+/* ---------- footer ---------- */
+footer{position:relative;z-index:1;background:var(--canvas);color:var(--text-secondary);padding:40px 0 48px;border-top:1px solid var(--line-dark)}
+footer .row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer .foot-logo{height:72px;width:auto;display:block}
+footer a{text-decoration:none}
+footer .foot-links{display:flex;gap:28px;flex-wrap:wrap;align-items:baseline}
+footer .foot-links a{transition:color .3s var(--ease)}
+footer .foot-links a:hover{color:var(--text-primary)}
+.socials{list-style:none;display:flex;gap:24px;flex-wrap:wrap;margin-top:26px}
+.socials a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid var(--line-dark);padding:8px 0 4px;transition:color .3s var(--ease),border-color .3s var(--ease)}
+.socials a:hover,.socials a:focus-visible{color:var(--text-primary);border-color:var(--text-primary)}
+@media (pointer:coarse){.socials a{min-height:44px;display:inline-flex;align-items:center}}
+footer .small{margin-top:14px;font-size:14px}
+
+/* ---------- lightbox ---------- */
+.box{position:fixed;inset:0;z-index:80;background:rgba(32,33,34,.97);display:none;align-items:center;justify-content:center;padding:clamp(16px,4vw,56px)}
+.box.open{display:flex}
+.box .inner{position:relative;width:min(1200px,100%);max-height:100%}
+.box video{width:auto;max-width:100%;height:78vh;max-height:78vh;margin:0 auto;background:#000;object-fit:contain}
+.box .frame-wrap{position:relative;width:100%;aspect-ratio:16/9;max-height:78vh;background:#000}
+.box .frame-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.box .bar{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin-top:14px;color:var(--text-secondary)}
+.box .bar h3{font-size:30px;color:var(--paper)}
+.box .close{background:none;border:1px solid var(--line-dark);color:var(--paper);padding:10px 14px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+
+/* ---------- entrances general ---------- */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .9s var(--ease),transform 1s var(--ease-out)}
+.in .reveal,.reveal.in{opacity:1;transform:none}
+.in .reveal.d1{transition-delay:.1s}.in .reveal.d2{transition-delay:.2s}
+.in.settled .reveal.d1,.in.settled .reveal.d2{transition-delay:0s}
+
+/* ---------- responsive ---------- */
+@media (max-width:1024px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .card.tall,.grid .card.tall:nth-of-type(6){grid-column:auto}
+  .caps{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:720px){
+  body{font-size:17px}
+  .grid{grid-template-columns:1fr}
+  .grid .card.tall{width:min(80%,300px);justify-self:center}
+  .card.wide{grid-column:auto}
+  .caps{grid-template-columns:1fr}
+  .contact .inner{grid-template-columns:1fr}
+  .eclipse{display:none}
+  .band{max-width:80vw}
+  .band.left{left:20px}
+}
+@media (max-height:560px){.cue,.side,.frame{display:none}}
+
+/* ---------- the five static-hero gates (must match the JS list exactly) ---------- */
+@media (max-width: 720px),(orientation: portrait) and (max-width: 1024px),(orientation: portrait) and (pointer: coarse),(orientation: landscape) and (pointer: coarse) and (max-height: 560px),(prefers-reduced-motion: reduce){
+  .hero{height:100vh;height:100svh}
+  .stage{position:relative;display:none}
+  .static-hero{display:flex;position:relative;height:100vh;height:100svh;align-items:flex-end;background:#2b2c2d url("assets/hero-static.jpg") center 40%/cover no-repeat;color:var(--paper);padding:0 20px 56px}
+  .static-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(43,44,45,.92) 0%,rgba(43,44,45,.35) 55%,rgba(43,44,45,.15) 100%)}
+  .static-hero .in{position:relative;max-width:640px}
+  .static-hero h1{font-size:clamp(48px,13vw,110px);text-shadow:var(--tshadow)}
+  .static-hero p{margin-top:14px;text-shadow:var(--tshadow);max-width:36ch}
+  .static-hero .ctas{margin-top:22px}
+  .static-hero .eyebrow{display:block;margin-bottom:14px}
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important;transition-delay:0s !important}
+  .eclipse .rays,.eclipse .corona{opacity:1}
+  .eclipse .halo{opacity:0}
+  html{scroll-behavior:auto}
+  body{opacity:1}
+  .env .glow,.env .grain{display:none}
+  .reveal,.grid .card{opacity:1;transform:none}
+  .card .cover{transform:none}
+}
+body.paused *,body.paused *::before,body.paused *::after{animation-play-state:paused !important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="env" aria-hidden="true"><div class="glow"></div><div class="grain"></div></div>
+
+<nav class="nav" aria-label="Main">
+  <a class="brand" href="#top" aria-label="Ryu Productions, Justin Tran, back to top"><img src="assets/logo-mark.png" alt="" width="47" height="34"><span>Justin Tran</span></a>
+  <ul>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li class="keep"><a class="cta" href="mailto:Ryuproductionsjt@gmail.com?subject=New%20project">Start a project</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="top">
+  <div class="stage" id="stage">
+    <div class="poster"></div>
+    <video id="hero" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
+    <div class="scrim" aria-hidden="true"></div>
+    <div class="frame" aria-hidden="true">
+      <i class="mark tl"></i><i class="mark tr"></i><i class="mark bl"></i><i class="mark br"></i>
+      <span class="side">Side A &nbsp;·&nbsp; Ryu Productions</span>
+      <span class="side r">Cat. RYU-000 &nbsp;·&nbsp; Justin Tran</span>
+    </div>
+
+    <div class="band left intro" data-a="0" data-b="0.2" data-fx="grid" data-spread="0.5">
+      <img class="band-logo" src="assets/logo-hero.png" alt="Ryu Productions" width="425" height="400">
+      <h1 class="split">Justin Tran</h1>
+    </div>
+    <div class="band left" data-a="0.42" data-b="0.58" data-fx="blur">
+      <div class="stack"><h2 class="soft" aria-hidden="true">Endless ideas, brought to life with AI.</h2><h2 class="sharp">Endless ideas, brought to life with AI.</h2></div>
+      <p class="sub k">AI carries the workload.<br>Every creative call starts in the mind.</p>
+    </div>
+    <div class="band center" data-a="0.86" data-b="1" data-fx="rise" data-ramp="0.04">
+      <span class="eyebrow mono">Behind every generation</span>
+      <h2 class="split-w">Ryu is the passion. Justin is the mind behind it.</h2>
+      <div class="ctas"><a class="btn solid" href="mailto:Ryuproductionsjt@gmail.com?subject=New%20project">Start a project</a><a class="btn" href="#work">Lift a cover</a></div>
+    </div>
+
+    <div class="cue" aria-hidden="true"><i></i><i></i><i></i></div>
+    <svg class="ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="126" style="stroke-dashoffset:var(--ld,126)"/></svg>
+  </div>
+
+  <div class="static-hero">
+    <div class="in">
+      <span class="eyebrow mono">Justin Tran · Ryu Productions</span>
+      <h1>Ryu is the passion. Justin is the mind behind it.</h1>
+      <p>Endless ideas, brought to life with AI. Every creative call starts in the mind.</p>
+      <div class="ctas"><a class="btn solid" href="mailto:Ryuproductionsjt@gmail.com?subject=New%20project">Start a project</a></div>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<section class="paper-sec sec work" id="work">
+  <div class="wrap">
+    <h2 class="work-title reveal">Projects</h2>
+    <div class="grid" id="grid">
+      <div class="series reveal"><h3>The Apprentice</h3></div>
+      <div class="project-note series-intro reveal">
+        <p class="series-note">A back-alley ripperdoc. A wall of forgotten tapes. An apprentice with a chrome arm and everything to prove, all the way to the arena floor.</p>
+        <p class="credit mono">Justin Tran in collaboration with Gossip Goblin</p>
+      </div>
+      <a class="card wide" href="#" data-title="The Apprentice" data-meta="Gossip Goblin · Episode 01 · 6:18" data-preview="assets/preview-apprentice.mp4" data-film="https://www.youtube.com/embed/nHuNJDqo2a8?autoplay=1&rel=0">
+        <img class="cover" src="assets/cover-apprentice.jpg" alt="The Apprentice print proof: the lead in teal, rust and key halftone plates above the title" loading="lazy" width="1920" height="1080">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>The Apprentice</h3><span class="mono">Gossip Goblin · Ep. 01 · 6:18</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <div class="series reveal"><h3>Journey to the West</h3></div>
+      <div class="project-note series-intro reveal">
+        <p class="series-note">A familiar story, retold for generations on screens, on stages and on the page. This series follows the version that always lived in the mind's eye.</p>
+        <p class="credit mono">Personal work · Ryu Productions</p>
+      </div>
+      <a class="card tall" href="#" data-title="Behelit" data-meta="Journey to the West · Episode 02" data-preview="assets/film-behelit.mp4" data-start="0" data-film="">
+        <img class="cover" src="assets/cover-behelit.jpg" alt="Behelit cover: a silhouette on the ridge under a red sky" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Behelit</h3><span class="mono">Ep. 02</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <a class="card tall" href="#" data-title="Heavenly Battle" data-meta="Journey to the West · Episode 03" data-preview="assets/film-heavenly-battle.mp4" data-start="20" data-film="">
+        <img class="cover" src="assets/cover-heavenly-battle.jpg" alt="Heavenly Battle cover: a lone figure crossing snow toward an army under a burning sky" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Heavenly Battle</h3><span class="mono">Ep. 03</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <a class="card tall" href="#" data-title="Hell Gate" data-meta="Journey to the West · Episode 04" data-preview="assets/film-hell-gate.mp4" data-start="0" data-film="">
+        <img class="cover" src="assets/cover-hell-gate.jpg" alt="Hell Gate cover: a red figure with a staff in a green cave, three panels" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Hell Gate</h3><span class="mono">Ep. 04</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <a class="card tall" href="#" data-title="Peach Garden" data-meta="Journey to the West · Episode 05" data-preview="assets/film-peach-garden.mp4" data-start="4" data-film="">
+        <img class="cover" src="assets/cover-peach-garden.jpg" alt="Peach Garden cover: a monkey in a tree heavy with peaches, in red and black halftone" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Peach Garden</h3><span class="mono">Ep. 05</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <a class="card tall" href="#" data-title="Au Revoir" data-meta="Journey to the West · Episode 06" data-preview="assets/film-au-revoir.mp4" data-start="20" data-film="">
+        <img class="cover" src="assets/cover-au-revoir.jpg" alt="Au Revoir cover: a figure reaching up into pink blossom trees over snow, title in a pink band above" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Au Revoir</h3><span class="mono">Ep. 06</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <a class="card tall" href="#" data-title="Divine Punishment" data-meta="Journey to the West · Episode 07" data-preview="assets/film-divine-punishment.mp4" data-start="25" data-film="">
+        <img class="cover" src="assets/cover-divine-punishment.jpg" alt="Divine Punishment cover: a robed figure beside a banner on a rocky peak under an orange sky, title in an orange band below" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Divine Punishment</h3><span class="mono">Ep. 07</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <a class="card tall" href="#" data-title="Anguish" data-meta="Journey to the West · Episode 08" data-preview="assets/film-anguish.mp4" data-start="4" data-film="">
+        <img class="cover" src="assets/cover-anguish.jpg" alt="Anguish cover: a lone figure on a rock in a grey misty sea, title in a pale band above" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Anguish</h3><span class="mono">Ep. 08</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <div class="series reveal"><h3>Neo</h3></div>
+      <div class="project-note series-intro reveal">
+        <p class="credit mono">Personal work · Ryu Productions</p>
+      </div>
+      <a class="card tall" href="#" data-title="Neo Tokyo Citizens" data-meta="Neo · Neo Tokyo Citizens" data-preview="assets/film-neo-tokyo-citizens.mp4" data-start="9" data-film="">
+        <img class="cover" src="assets/cover-neo-tokyo-citizens.jpg" alt="Neo Tokyo Citizens cover: a grinning face with red lips behind glass, with two halftone close-ups on a pink field" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Neo Tokyo Citizens</h3><span class="mono">01</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <a class="card tall" href="#" data-title="Neo Tokyo" data-meta="Neo · Neo Tokyo" data-preview="assets/film-neo-tokyo.mp4" data-start="0" data-film="">
+        <img class="cover" src="assets/cover-neo-tokyo.jpg" alt="Neo Tokyo cover: rain-streaked subway seats in ochre and olive halftone, with a photo of a lone rider below" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Neo Tokyo</h3><span class="mono">02</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <a class="card tall" href="#" data-title="Neo Malaysia" data-meta="Neo · Neo Malaysia" data-preview="assets/film-neo-malaysia.mp4" data-start="4" data-film="">
+        <img class="cover" src="assets/cover-neo-malaysia.jpg" alt="Neo Malaysia cover: a veiled figure kneeling in prayer in black and cream halftone, beside a red panel of an eight-point star, crescent, lantern and prayer beads" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Neo Malaysia</h3><span class="mono">03</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+      <a class="card tall" href="#" data-title="Neo Malaysia Citizens" data-meta="Neo · Neo Malaysia Citizens" data-preview="assets/film-neo-malaysia-citizens.mp4" data-start="4.5" data-film="">
+        <img class="cover" src="assets/cover-neo-malaysia-citizens.jpg" alt="Neo Malaysia Citizens cover: a woman in a glossy red helmet facing an old screen, between a red and a teal panel" loading="lazy" width="1080" height="1440">
+        <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <i class="marks" aria-hidden="true"></i>
+        <div class="label"><h3>Neo Malaysia Citizens</h3><span class="mono">04</span></div>
+        <button class="open" type="button">Open film</button>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="paper-sec sec contact" id="contact">
+  <div class="wrap">
+    <div class="inner">
+      <div>
+        <span class="kicker mono reveal">Side A</span>
+        <h2 class="reveal d1">Start a project.</h2>
+        <p class="reveal d2">Tell me what you want to see. One line is enough.</p>
+        <div class="ctas reveal d2">
+          <a class="btn solid" href="mailto:Ryuproductionsjt@gmail.com?subject=New%20project">Email Ryu</a>
+          <a class="mail" href="mailto:Ryuproductionsjt@gmail.com">Ryuproductionsjt@gmail.com</a>
+        </div>
+        <ul class="socials reveal d2" aria-label="Elsewhere">
+          <li><a href="https://www.instagram.com/ryu_productions/" target="_blank" rel="noopener">Instagram <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.linkedin.com/in/justin-tran-705b86167/" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a></li>
+        </ul>
+      </div>
+      <div class="eclipse" aria-hidden="true"><i class="halo"></i><i class="rays"></i><i class="corona"></i><i class="sun"></i><i class="moon"></i><i class="glint g1"></i><i class="glint g2"></i></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <img class="foot-logo" src="assets/logo-full.png" alt="Ryu Productions" width="77" height="72">
+      <span class="mono">Justin Tran</span>
+      <span class="foot-links"><a class="mono" href="https://www.instagram.com/ryu_productions/" target="_blank" rel="noopener">Instagram</a><a class="mono" href="https://www.linkedin.com/in/justin-tran-705b86167/" target="_blank" rel="noopener">LinkedIn</a><a class="mono" href="mailto:Ryuproductionsjt@gmail.com">Ryuproductionsjt@gmail.com</a></span>
+    </div>
+    <p class="small">Films made with AI tools. Directed and designed by hand.</p>
+  </div>
+</footer>
+
+<div class="box" id="box" role="dialog" aria-modal="true" aria-label="Film player" hidden>
+  <div class="inner">
+    <div class="frame-wrap" id="boxf" hidden></div>
+    <video id="boxv" controls playsinline preload="none" tabindex="0"></video>
+    <div class="bar"><h3 id="boxt"></h3><span class="mono" id="boxm"></span><button class="close" id="boxc" type="button">Close</button></div>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+const smoothstep = (p, e0, e1) => { const t = clamp((p - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
+function rng(seed){ let s = seed >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; }
+const RM = matchMedia('(prefers-reduced-motion: reduce)');
+
+/* ---------- hero text splitting (once) ---------- */
+const bandEls = $$('.band');
+bandEls.forEach((b, bi) => {
+  const fx = b.dataset.fx;
+  const spread = parseFloat(b.dataset.spread || '0.55');
+  const r = rng(1000 + bi * 77);
+  $$('.split', b).forEach(el => {
+    const text = el.textContent;
+    const words = text.split(' ');
+    const total = text.replace(/ /g, '').length;
+    let ci = 0;
+    const vh = `<span class="vh">${text}</span>`;
+    const vis = words.map(w => '<span class="w" aria-hidden="true">' + [...w].map(ch => {
+      let th, jx, jy, jr;
+      if (fx === 'grid') { th = ci / total * spread + r() * 0.06; jx = -40 - r() * 60; jy = 0; jr = 0; }
+      else { th = r() * 0.55; jx = (r() - .5) * 120; jy = (r() - .5) * 90; jr = (r() - .5) * 40; }
+      ci++;
+      return `<span class="c" style="--th:${th.toFixed(3)};--jx:${jx.toFixed(1)}px;--jy:${jy.toFixed(1)}px;--jr:${jr.toFixed(1)}deg">${ch}</span>`;
+    }).join('') + '</span>').join(' ');
+    el.innerHTML = vh + vis;
+  });
+  $$('.split-w', b).forEach(el => {
+    const text = el.textContent; const words = text.split(' ');
+    el.innerHTML = `<span class="vh">${text}</span>` + words.map((w, i) => `<span class="w" aria-hidden="true" style="--th:${(i / words.length * 0.5).toFixed(3)}">${w}</span>`).join(' ');
+  });
+});
+
+/* ---------- hero scrub ---------- */
+const hero = $('.hero'), stage = $('#stage'), video = $('#hero'), ring = $('.ring'), posterLayer = $('.poster'), cue = $('.cue');
+// Two versions of the opening film: true HDR for HDR screens that can decode it, standard everywhere else.
+// ?hdr=1 or ?hdr=0 in the address forces one, for testing.
+const HDR_FORCE = new URLSearchParams(location.search).get('hdr');
+const HDR_OK = HDR_FORCE === '1' || (HDR_FORCE !== '0'
+  && matchMedia('(dynamic-range: high)').matches
+  && document.createElement('video').canPlayType('video/mp4; codecs="hvc1.2.4.L120.B0"') !== '');
+const VIDEO_URL = HDR_OK ? 'assets/hero-scrub-hdr.mp4' : 'assets/hero-scrub.mp4';
+const VIDEO_END = 0.9;   // fraction of the scroll at which the film reaches its last frame (below 1 holds the last frame)
+const videoTime = p => Math.min(1, p / VIDEO_END) * (video.duration || 0);
+const VIDEO_BYTES = HDR_OK ? 21875582 : 18420573;
+const bands = bandEls.map(b => ({ el: b, a: +b.dataset.a, b: +b.dataset.b, ramp: b.dataset.ramp ? +b.dataset.ramp : null, op: -1, k: -1 }));
+let target = 0, shown = 0, rafId = null, lastTick = 0, heroOnScreen = true, scrubOn = false, heroInit = false;
+let loadK = 0, loadStart = 0, cueGone = false;
+
+function heroProgress(){ const range = hero.offsetHeight - innerHeight; return range > 0 ? clamp(scrollY / range, 0, 1) : 0; }
+
+let seekBusy = false, pendingTime = null;
+function requestSeek(t){ if (!video.duration) return; if (seekBusy) { pendingTime = t; return; } seekBusy = true; video.currentTime = t; }
+video.addEventListener('seeked', () => { seekBusy = false; if (pendingTime !== null) { const t = pendingTime; pendingTime = null; requestSeek(t); } });
+video.addEventListener('error', () => { seekBusy = false; pendingTime = null; failVideo(); });
+
+function updateCaptions(p, now){
+  bands.forEach((bd, i) => {
+    const { a, b } = bd;
+    const f = Math.min(0.02, (b - a) / 3);
+    const inE = i === 0 ? 1 : smoothstep(p, a, a + f);
+    const outE = i === bands.length - 1 ? 1 : (1 - smoothstep(p, b - f, b));
+    const op = inE * outE;
+    const ramp = bd.ramp || Math.min(0.025, (b - a) * 0.35);
+    let k = clamp((p - a) / ramp, 0, 1);
+    if (i === 0) k = Math.max(k, loadK);
+    if (Math.abs(op - bd.op) > 0.004 || (op === 0 && bd.op !== 0) || (op === 1 && bd.op !== 1)) { bd.op = op; bd.el.style.opacity = op.toFixed(3); }
+    if (Math.abs(k - bd.k) > 0.008 || (k === 1 && bd.k !== 1) || (k === 0 && bd.k !== 0)) { bd.k = k; bd.el.style.setProperty('--k', k.toFixed(3)); }
+  });
+  if (!cueGone && p > 0.04) { cueGone = true; cue.classList.add('gone'); }
+  else if (cueGone && p < 0.02 && !RM.matches) { cueGone = false; cue.classList.remove('gone'); }
+}
+
+function tick(now){
+  const dt = Math.min(100, now - (lastTick || now)); lastTick = now;
+  if (loadK < 1) { if (!loadStart) loadStart = now; loadK = clamp((now - loadStart) / 1400, 0, 1); loadK = loadK * loadK * (3 - 2 * loadK); }
+  const kk = 0.24;
+  shown += (target - shown) * (1 - Math.pow(1 - kk, dt / 16.667));
+  let rest = false;
+  if (Math.abs(target - shown) < 0.0005 && loadK >= 1) { shown = target; rest = true; }
+  if (rest) { rafId = null; lastTick = 0; } else rafId = requestAnimationFrame(tick);
+  if (video.duration) requestSeek(Math.min(videoTime(shown), video.duration - 0.05));
+  updateCaptions(shown, now);
+}
+function onScroll(){ target = heroProgress(); if (rafId === null && heroOnScreen) rafId = requestAnimationFrame(tick); }
+new IntersectionObserver(es => { heroOnScreen = es[0].isIntersecting; if (heroOnScreen) onScroll(); }, { threshold: 0 }).observe(hero);
+
+let started = false;
+function startBlobFetch(){ if (started) return; started = true; loadHeroBlob().catch(failVideo); }
+function initHeroOnce(){
+  if (heroInit) return; heroInit = true;
+  posterLayer.style.backgroundImage = "url('assets/hero-poster.jpg')";
+  const img = new Image(); img.onload = startBlobFetch; img.onerror = startBlobFetch; img.src = 'assets/hero-poster.jpg';
+  setTimeout(startBlobFetch, 4000);
+}
+async function loadHeroBlob(){
+  if (location.protocol === 'file:') throw new Error('file protocol');
+  const ctrl = new AbortController(); let watchdog = setTimeout(() => ctrl.abort(), 20000);
+  const res = await fetch(VIDEO_URL, { priority: 'low', signal: ctrl.signal });
+  if (!res.ok || !res.body) throw new Error('fetch failed');
+  const total = Number(res.headers.get('Content-Length')) || VIDEO_BYTES;
+  const reader = res.body.getReader(); const chunks = []; let got = 0, lastRing = 0;
+  for (;;) {
+    const { done, value } = await reader.read(); if (done) break;
+    clearTimeout(watchdog); watchdog = setTimeout(() => ctrl.abort(), 20000);
+    chunks.push(value); got += value.length;
+    const frac = Math.min(1, got / total); const now = performance.now();
+    if (now - lastRing > 100 || frac === 1) { lastRing = now; ring.style.setProperty('--ld', Math.round(126 * (1 - frac))); }
+  }
+  clearTimeout(watchdog); ring.style.setProperty('--ld', 0);
+  video.src = URL.createObjectURL(new Blob(chunks, { type: 'video/mp4' })); video.load();
+  video.addEventListener('canplay', () => { requestSeek(Math.min(videoTime(heroProgress()), video.duration - 0.05)); stage.classList.add('video-ready'); }, { once: true });
+}
+function failVideo(){
+  if (stage.classList.contains('video-failed')) return;
+  stage.classList.add('video-failed');
+  const c = document.createElement('div'); c.className = 'chev'; c.setAttribute('aria-hidden', 'true');
+  c.innerHTML = '<svg viewBox="0 0 34 34" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 14l8 8 8-8"/></svg>';
+  ring.replaceWith(c);
+}
+
+/* ---------- the five gates (must match the CSS list exactly) ---------- */
+const GATES = [
+  '(max-width: 720px)',
+  '(orientation: portrait) and (max-width: 1024px)',
+  '(orientation: portrait) and (pointer: coarse)',
+  '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)',
+  '(prefers-reduced-motion: reduce)'
+];
+function enableScrub(){
+  if (scrubOn) return; scrubOn = true;
+  initHeroOnce();
+  addEventListener('scroll', onScroll, { passive: true });
+  bands.forEach(b => { b.op = -1; b.k = -1; });
+  unpinFinalStates();
+  updateCaptions(heroProgress(), performance.now());
+  onScroll();
+}
+function disableScrub(){
+  if (!scrubOn) return; scrubOn = false;
+  removeEventListener('scroll', onScroll);
+  if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+}
+function applyHeroMode(){ if (GATES.some(q => matchMedia(q).matches)) disableScrub(); else enableScrub(); }
+const MQLS = GATES.map(q => matchMedia(q));
+MQLS.forEach(m => m.addEventListener('change', applyHeroMode));
+
+/* ---------- section entrances ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); setTimeout(() => e.target.classList.add('settled'), 1400); io.unobserve(e.target); }
+}), { threshold: 0.01, rootMargin: '0px 0px -12% 0px' });
+$$('.sec, #grid').forEach(el => io.observe(el));
+
+/* ---------- hover previews ---------- */
+const cards = $$('.card');
+let soundOn = false, soundHinted = false;   // sound stays off until the visitor asks; the hint shows once
+let soundScrollY = 0;
+// Sound only lasts while the visitor stays put: a real scroll mutes every cover and resets the choice.
+function silenceCovers(){
+  if (!soundOn) return;
+  soundOn = false;
+  cards.forEach(c => { const v = $('video', c); if (v) v.muted = true; if (c._sound) c._sound(false); });
+}
+addEventListener('scroll', () => { if (soundOn && Math.abs(scrollY - soundScrollY) > 40) silenceCovers(); }, { passive: true });
+const coarse = matchMedia('(pointer: coarse)');
+function armCard(card){
+  const v = $('video', card);
+  if (!v.src) {
+    const start = parseFloat(card.dataset.start || '0');
+    if (start > 0) {
+      // Jump to the chosen moment once the browser can reach it. On hosts without partial
+      // downloads that only happens after enough of the file has arrived, so keep trying.
+      const tryStart = () => {
+        if (!(v.duration > start)) return;
+        const s = v.seekable;
+        for (let i = 0; i < s.length; i++) {
+          if (s.start(i) <= start && s.end(i) >= start) {
+            v.currentTime = start;
+            ['loadedmetadata', 'progress', 'timeupdate'].forEach(e => v.removeEventListener(e, tryStart));
+            return;
+          }
+        }
+      };
+      ['loadedmetadata', 'progress', 'timeupdate'].forEach(e => v.addEventListener(e, tryStart));
+    }
+    v.src = card.dataset.preview; v.load();
+  }
+  card.classList.add('on');
+  const wantSound = soundOn && card.classList.contains('has-scrub');
+  v.muted = !wantSound;
+  if (card._sound) card._sound(wantSound);
+  if (card.classList.contains('has-scrub') && !soundHinted) {
+    card.classList.add('hint');
+    clearTimeout(card._hintT); card._hintT = setTimeout(() => card.classList.remove('hint'), 3400);
+  }
+  const p = v.play();
+  if (p && p.catch) p.catch(() => { if (!v.muted) { v.muted = true; if (card._sound) card._sound(false); v.play().catch(() => {}); } });
+}
+function disarmCard(card){ const v = $('video', card); card.classList.remove('on', 'hint'); clearTimeout(card._hintT); v.pause(); }
+cards.forEach(card => {
+  card.addEventListener('pointerenter', e => { if (e.pointerType === 'touch') return; armCard(card); });
+  card.addEventListener('pointerleave', e => { if (e.pointerType === 'touch' || card.dataset.dragging) return; disarmCard(card); });
+  card.addEventListener('focusin', () => { if (!coarse.matches) armCard(card); });
+  card.addEventListener('focusout', e => { if (!coarse.matches && !card.contains(e.relatedTarget)) disarmCard(card); });
+  card.addEventListener('click', e => {
+    e.preventDefault();
+    if (coarse.matches && !card.classList.contains('on')) { cards.forEach(c => c !== card && disarmCard(c)); armCard(card); return; }
+    openFilm(card);
+  });
+  $('.open', card).addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); openFilm(card); });
+});
+// The top bar sits on a soft fade over the opening film, then turns solid charcoal below it
+// so the red logo always reads, even over bright covers.
+const navEl = $('.nav');
+new IntersectionObserver(es => navEl.classList.toggle('solid', !es[0].isIntersecting), { rootMargin: '-72px 0px 0px 0px' }).observe(hero);
+const cardIO = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) disarmCard(e.target); }), { threshold: 0 });
+cards.forEach(c => cardIO.observe(c));
+
+/* ---------- episode timelines: scrub the full film right on the cover ---------- */
+const fmt = t => { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+$$('.card.tall').forEach(card => {
+  const v = $('video', card);
+  card.classList.add('has-scrub');
+  const scrub = document.createElement('div');
+  scrub.className = 'scrub';
+  scrub.innerHTML = '<div class="track" role="slider" tabindex="0" aria-label="Timeline for ' + card.dataset.title + '" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"><i class="fill"></i><span class="kw"><i class="knob"></i></span></div><span class="t mono">0:00</span>'
+    + '<button class="snd" type="button" aria-pressed="false" aria-label="Turn sound on for ' + card.dataset.title + '">'
+    + '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 6h2.5L8 3v10L4.5 10H2z" fill="currentColor" stroke="none"/><path class="w" d="M10.5 5.5a3.5 3.5 0 0 1 0 5M12.3 3.7a6 6 0 0 1 0 8.6"/><path class="x" d="M10.5 6l4 4M14.5 6l-4 4"/></svg>'
+    + '</button>';
+  card.appendChild(scrub);
+  const track = $('.track', scrub), time = $('.t', scrub);
+  let raf = null, dragging = false, lastP = -1, lastTxt = '';
+  const paint = () => {
+    const d = v.duration || 0, c = v.currentTime || 0, p = d ? c / d : 0;
+    if (Math.abs(p - lastP) > 0.0008) { lastP = p; scrub.style.setProperty('--p', p.toFixed(4)); }
+    const txt = fmt(c) + ' / ' + (d ? fmt(d) : '--:--');
+    if (txt !== lastTxt) {
+      lastTxt = txt; time.textContent = txt;
+      track.setAttribute('aria-valuenow', Math.round(c)); track.setAttribute('aria-valuemax', Math.round(d)); track.setAttribute('aria-valuetext', txt);
+    }
+  };
+  const loop = () => { paint(); raf = card.classList.contains('on') ? requestAnimationFrame(loop) : null; };
+  new MutationObserver(() => { if (card.classList.contains('on') && raf === null) raf = requestAnimationFrame(loop); })
+    .observe(card, { attributes: true, attributeFilter: ['class'] });
+  const seekTo = (clientX, exact) => {
+    if (!v.duration) return;
+    const r = track.getBoundingClientRect();
+    const t = clamp((clientX - r.left) / r.width, 0, 1) * v.duration;
+    if (!exact && v.fastSeek) v.fastSeek(t); else v.currentTime = t;
+    paint();
+  };
+  scrub.addEventListener('pointerdown', e => {
+    e.preventDefault(); e.stopPropagation();
+    if (!card.classList.contains('on')) armCard(card);
+    dragging = true; card.dataset.dragging = '1';
+    v.pause();
+    try { scrub.setPointerCapture(e.pointerId); } catch (_) {}
+    seekTo(e.clientX, true);
+  });
+  scrub.addEventListener('pointermove', e => { if (dragging) seekTo(e.clientX, false); });
+  const endDrag = e => {
+    if (!dragging) return;
+    dragging = false; delete card.dataset.dragging;
+    if (e && e.clientX !== undefined) seekTo(e.clientX, true);
+    if (card.classList.contains('on')) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+  };
+  scrub.addEventListener('pointerup', endDrag);
+  scrub.addEventListener('pointercancel', endDrag);
+  scrub.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); });
+  const ep = $('.label .mono', card);
+  if (ep) {
+    const swap = document.createElement('span'); swap.className = 'swap';
+    ep.replaceWith(swap); ep.classList.add('ep'); swap.appendChild(ep);
+    const tip = document.createElement('span'); tip.className = 'mono tip'; tip.textContent = 'Sound'; tip.setAttribute('aria-hidden', 'true');
+    swap.appendChild(tip);
+  }
+  const snd = $('.snd', scrub);
+  const showSound = on => {
+    snd.setAttribute('aria-pressed', on ? 'true' : 'false');
+    snd.setAttribute('aria-label', (on ? 'Turn sound off for ' : 'Turn sound on for ') + card.dataset.title);
+  };
+  snd.addEventListener('pointerdown', e => e.stopPropagation());
+  snd.addEventListener('click', e => {
+    e.preventDefault(); e.stopPropagation();
+    if (!card.classList.contains('on')) armCard(card);
+    soundOn = v.muted;              // toggling: muted now means the visitor wants sound
+    soundHinted = true; card.classList.remove('hint');
+    v.muted = !soundOn; showSound(soundOn);
+    soundScrollY = scrollY;          // scrolling away from here turns sound back off
+    if (soundOn) { const p = v.play(); if (p && p.catch) p.catch(() => { v.muted = true; soundOn = false; showSound(false); }); }
+  });
+  card._sound = showSound;
+  track.addEventListener('keydown', e => {
+    if (!v.duration) return;
+    const step = e.shiftKey ? 15 : 5;
+    if (e.key === 'ArrowRight') v.currentTime = Math.min(v.duration - 0.1, v.currentTime + step);
+    else if (e.key === 'ArrowLeft') v.currentTime = Math.max(0, v.currentTime - step);
+    else if (e.key === 'Home') v.currentTime = 0;
+    else if (e.key === 'End') v.currentTime = Math.max(0, v.duration - 0.1);
+    else if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); openFilm(card); return; }
+    else return;
+    e.preventDefault(); e.stopPropagation(); paint();
+  });
+});
+
+/* ---------- lightbox ---------- */
+const box = $('#box'), boxv = $('#boxv'), boxf = $('#boxf'), boxt = $('#boxt'), boxm = $('#boxm'), boxc = $('#boxc');
+let lastFocus = null;
+function openFilm(card){
+  cards.forEach(disarmCard);
+  const film = card.dataset.film;
+  lastFocus = card;
+  boxt.textContent = card.dataset.title;
+  if (film) {
+    boxm.textContent = card.dataset.meta;
+    boxv.hidden = true; boxf.hidden = false;
+    boxf.innerHTML = '<iframe src="' + film + '" title="' + card.dataset.title + '" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  } else {
+    boxm.textContent = card.dataset.meta;
+    boxf.hidden = true; boxv.hidden = false;
+    boxv.src = card.dataset.preview; boxv.loop = false; boxv.muted = false;
+    const p = boxv.play(); if (p && p.catch) p.catch(() => {});
+  }
+  box.hidden = false; box.classList.add('open'); document.body.style.overflow = 'hidden';
+  if (film) boxc.focus(); else boxv.focus();
+}
+function closeFilm(){ boxv.pause(); boxv.removeAttribute('src'); boxv.load(); boxf.innerHTML = ''; boxf.hidden = true; box.classList.remove('open'); box.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
+boxc.addEventListener('click', closeFilm);
+box.addEventListener('click', e => { if (e.target === box) closeFilm(); });
+addEventListener('keydown', e => {
+  if (!box.classList.contains('open')) return;
+  if (e.key === 'Escape') { closeFilm(); return; }
+  if (boxv.hidden || !boxv.duration || e.target === boxv) return;   // the video's own controls handle keys when it has focus
+  if (e.key === 'ArrowRight') { e.preventDefault(); boxv.currentTime = Math.min(boxv.duration, boxv.currentTime + 5); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); boxv.currentTime = Math.max(0, boxv.currentTime - 5); }
+  else if (e.key === ' ' && e.target.tagName !== 'BUTTON') { e.preventDefault(); if (boxv.paused) boxv.play(); else boxv.pause(); }
+});
+
+/* ---------- reduced motion, both directions ---------- */
+let pinned = false;
+function pinToFinalStates(){
+  pinned = true;
+  $$('.sec, #grid').forEach(el => { el.classList.add('in', 'settled'); });
+  bands.forEach(b => { b.el.style.opacity = ''; b.el.style.removeProperty('--k'); b.op = -1; b.k = -1; });
+}
+function unpinFinalStates(){ if (!pinned) return; pinned = false; }
+RM.addEventListener('change', e => { if (e.matches) { pinToFinalStates(); disableScrub(); } else applyHeroMode(); });
+if (RM.matches) pinToFinalStates();
+
+/* ---------- pause everything on hidden tabs ---------- */
+document.addEventListener('visibilitychange', () => { document.body.classList.toggle('paused', document.hidden); if (document.hidden) cards.forEach(disarmCard); });
+
+/* ---------- go ---------- */
+applyHeroMode();
+})();
+</script>
+</body>
+</html>
