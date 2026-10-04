@@ -90,8 +90,8 @@ h1,h2,h3{font-family:var(--display);font-weight:800;line-height:.92;letter-spaci
 /* ---------- hero ---------- */
 .hero{position:relative;height:1000vh;z-index:1}
 .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--canvas)}
-.poster{position:absolute;inset:0;background-size:cover;background-position:center center}
-#hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;opacity:0;transition:opacity 1.2s var(--ease);will-change:transform;transform:translateZ(0)}
+.poster{position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center center}
+#hero{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center center;opacity:0;transition:opacity 1.2s var(--ease);will-change:transform;transform:translateZ(0)}
 .stage.video-ready #hero{opacity:1}
 .stage.video-failed #hero{display:none}
 .scrim{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 120% 90% at 50% 45%,rgba(10,10,18,0) 35%,rgba(10,10,18,.62) 100%)}
@@ -580,13 +580,15 @@ const hero = $('.hero'), stage = $('#stage'), video = $('#hero'), ring = $('.rin
 // Two versions of the opening film: true HDR for HDR screens that can decode it, standard everywhere else.
 // ?hdr=1 or ?hdr=0 in the address forces one, for testing.
 const HDR_FORCE = new URLSearchParams(location.search).get('hdr');
+// Macs tone-map HDR video well even on standard screens, so they always get it when they can decode it.
+const IS_MAC = /Mac/.test(navigator.platform || '') || (navigator.userAgentData && navigator.userAgentData.platform === 'macOS');
 const HDR_OK = HDR_FORCE === '1' || (HDR_FORCE !== '0'
-  && matchMedia('(dynamic-range: high)').matches
-  && document.createElement('video').canPlayType('video/mp4; codecs="hvc1.2.4.L120.B0"') !== '');
+  && (matchMedia('(dynamic-range: high)').matches || IS_MAC)
+  && document.createElement('video').canPlayType('video/mp4; codecs="hvc1.2.4.L123.B0"') !== '');
 const VIDEO_URL = HDR_OK ? 'assets/hero-scrub-hdr.mp4' : 'assets/hero-scrub.mp4';
 const VIDEO_END = 0.9;   // fraction of the scroll at which the film reaches its last frame (below 1 holds the last frame)
 const videoTime = p => Math.min(1, p / VIDEO_END) * (video.duration || 0);
-const VIDEO_BYTES = HDR_OK ? 21875582 : 18420573;
+const VIDEO_BYTES = HDR_OK ? 35766083 : 34808135;
 const bands = bandEls.map(b => ({ el: b, a: +b.dataset.a, b: +b.dataset.b, ramp: b.dataset.ramp ? +b.dataset.ramp : null, op: -1, k: -1 }));
 let target = 0, shown = 0, rafId = null, lastTick = 0, heroOnScreen = true, scrubOn = false, heroInit = false;
 let loadK = 0, loadStart = 0, cueGone = false;
