@@ -174,6 +174,7 @@ main section + section{border-top:1px solid var(--line-dark)}
 .client{display:flex;align-items:center;gap:14px}
 .client img{width:44px;height:44px;flex-shrink:0;display:block}
 .project-note .client .credit{margin-top:0}
+.project-note .client + .series-note{margin-top:16px}
 .project-note .credit{margin-top:14px;color:var(--text-secondary);opacity:.8}
 .series-note{grid-column:1 / -1;max-width:46ch;margin:-4px 0 clamp(8px,1.4vw,20px);color:var(--text-secondary);font-size:clamp(16px,1.15vw,18px);line-height:1.55}
 .series::after{content:"";flex:1;height:1px;background:var(--line-paper)}
@@ -405,6 +406,7 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
           <img src="assets/logo-authors-first.png" alt="Authors First" width="44" height="44">
           <p class="credit mono">Birth of an Empire · Season 1 · Video generation by Justin Tran for Authors First</p>
         </div>
+        <p class="series-note">Authors First gives authors full creative control, final-cut approval and fair compensation, using AI and other technology as production tools. For fans, it creates a “watch the book” experience, brought to life as the author imagined it.</p>
       </div>
       <a class="card banner no-preview" href="#" data-title="Genghis: Birth of an Empire" data-meta="Authors First · Season 1" data-film="https://www.youtube.com/embed/aGXC12uqN5o?autoplay=1&rel=0">
         <img class="cover" src="assets/cover-genghis.jpg" alt="Genghis: Birth of an Empire, Season 1: a young Temüjin with a bow, surrounded by his family, beneath a stormy sky of drifting embers" loading="lazy" width="1584" height="396">
